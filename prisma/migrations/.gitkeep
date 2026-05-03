@@ -1,0 +1,6 @@
+#!/bin/bash
+# Initialize migrations directory for Prisma
+
+mkdir -p prisma/migrations
+
+echo "Migrations directory ready for Prisma migrations"

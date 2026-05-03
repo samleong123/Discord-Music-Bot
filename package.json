@@ -1,0 +1,24 @@
+{
+  "name": "discord-music-bot-monorepo",
+  "version": "1.0.0",
+  "description": "A TypeScript-based Discord music bot with web dashboard",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm --workspace=bot-api run dev",
+    "build": "npm --workspace=bot-api run build",
+    "start": "npm --workspace=bot-api run start",
+    "prisma": "prisma",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

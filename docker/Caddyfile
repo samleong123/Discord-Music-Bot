@@ -1,0 +1,14 @@
+# Caddy configuration for reverse proxy and HTTPS
+# Uncomment in docker-compose.yml to use
+
+musicbot.example.com {
+    reverse_proxy app:3000 {
+        header_up X-Forwarded-For {http.request.remote}
+        header_up X-Forwarded-Proto {http.request.scheme}
+    }
+}
+
+# For local development:
+# localhost:3000 {
+#     reverse_proxy app:3000
+# }

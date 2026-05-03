@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model GuildSettings {
+  id                  String   @id @default(cuid())
+  guildId             String   @unique
+  guildName           String
+  djModeEnabled       Boolean  @default(false)
+  djRoleId            String?
+  voteSkipEnabled     Boolean  @default(false)
+  defaultVolume       Float    @default(0.5)
+  allowedSourcesJson  String?  // JSON array of allowed sources
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  auditLogs           AuditLog[]
+  savedPlaylists      SavedPlaylist[]
+}
+
+model DashboardUser {
+  id              String   @id @default(cuid())
+  discordUserId   String   @unique
+  username        String
+  role            String   @default("user") // "owner", "admin", "user"
+  createdAt       DateTime @default(now())
+  lastLoginAt     DateTime?
+
+  savedPlaylists  SavedPlaylist[]
+  auditLogs       AuditLog[]
+}
+
+model SavedPlaylist {
+  id              String   @id @default(cuid())
+  guildId         String
+  guild           GuildSettings @relation(fields: [guildId], references: [guildId])
+  name            String
+  createdByUserId String
+  createdBy       DashboardUser @relation(fields: [createdByUserId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tracks          SavedPlaylistTrack[]
+
+  @@index([guildId])
+  @@index([createdByUserId])
+}
+
+model SavedPlaylistTrack {
+  id              String   @id @default(cuid())
+  playlistId      String
+  playlist        SavedPlaylist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  position        Int
+  source          String   // "youtube", "soundcloud", etc.
+  title           String
+  originalUrl     String
+  durationSec     Int?
+  thumbnailUrl    String?
+  metadataJson    String?  // Store additional metadata
+
+  @@index([playlistId])
+}
+
+model AuditLog {
+  id              String   @id @default(cuid())
+  guildId         String
+  guild           GuildSettings @relation(fields: [guildId], references: [guildId])
+  actorType       String   // "user", "bot", "system"
+  actorId         String?
+  actor           DashboardUser? @relation(fields: [actorId], references: [id])
+  action          String   // "play", "skip", "queue_clear", etc.
+  detailsJson     String?  // JSON of additional details
+  createdAt       DateTime @default(now())
+
+  @@index([guildId])
+  @@index([createdAt])
+}
+
+model SecretSettings {
+  id              String   @id @default(cuid())
+  keyName         String   @unique
+  encryptedValue  String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
