@@ -50,10 +50,15 @@
 2. Click **"URL Generator"**
 3. Select scopes: `bot`, `applications.commands`
 4. Select permissions:
-   - Read Messages/View Channels
+   - Manage Messages
+   - Read Message History
    - Send Messages
+   - Bypass Slowmode
    - Connect (to voice channels)
    - Speak
+5. Integration Type: `Guild Install`
+<img width="1709" height="1969" alt="image" src="https://github.com/user-attachments/assets/807acce2-3952-4403-84e7-c375d6115d91" />
+
 
 ### 2.2 Invite Bot
 
